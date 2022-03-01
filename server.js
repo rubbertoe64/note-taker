@@ -52,11 +52,12 @@ app.delete('/api/notes/:id', (req, res) => {
   let noteId = req.params.id;
 
   const noteIndex= noteInfo.map(note => note.id).indexOf(noteId)
-
-  if (noteIndex > -1) {
-    const newNotes = noteInfo.splice(noteIndex, 1)
-    fs.writeFileSync('./db/db.json', JSON.stringify(newNotes))
-    res.json(newNotes)
+  console.log(noteIndex);
+  if (noteIndex >= 0) {
+    noteInfo.splice(noteIndex, 1)
+    console.log(noteInfo)
+    fs.writeFileSync('./db/db.json', JSON.stringify(noteInfo))
+    res.json(noteInfo)
   }else{
     res.status(404).send({
       message: 'Note Not Found'
