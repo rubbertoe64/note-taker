@@ -1,9 +1,12 @@
 const express = require('express');
 const path = require('path');
+const {v4 : uuidv4} = require('uuid')
+
 // const noteData = require('./db/db.json')
 
 const fs = require('fs');
-const res = require('express/lib/response');
+const { response } = require('express');
+
 
 const app = express();
 const PORT = 3002;
@@ -20,22 +23,50 @@ app.get('/notes', (req, res) =>
 );
 
 app.get('/api/notes', (req, res) => {
-   console.info(`did a thing`),
-  res.sendFile(path.join(__dirname, '/db/db.json'))
+   
+  JSON.stringify(res.sendFile(path.join(__dirname, '/db/db.json')))
 }
 );
 
 
 app.post('/api/notes', (req, res) => {
-  console.log(req)
+  const createNote = req.body;
+  createNote.id = uuidv4();
+
+  let noteInfo = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'))
+
+  noteInfo.push(createNote)
+  fs.writeFileSync('./db/db.json', JSON.stringify(noteInfo))
+  
+
+  
+  res.json(noteInfo)
+
 }
 
 );
 
 
-// app.delete('/api/notes/:id', (req, res) => {
+app.delete('/api/notes/:id', (req, res) => {
+  let noteInfo = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'))
+  let noteId = req.params.id;
+
+  const noteIndex= noteInfo.map(note => note.id).indexOf(noteId)
+
+  if (noteIndex > -1) {
+    const newNotes = noteInfo.splice(noteIndex, 1)
+    fs.writeFileSync('./db/db.json', JSON.stringify(newNotes))
+    res.json(newNotes)
+  }else{
+    res.status(404).send({
+      message: 'Note Not Found'
+    })
+  }
+
   
-// }
+
+
+});
 
 
 app.listen(PORT, () =>
