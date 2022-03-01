@@ -12,5 +12,15 @@
   "dependencies": {
     "express": "^4.16.4",
     "uuid": "^8.3.2"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rubbertoe64/note-taker.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/rubbertoe64/note-taker/issues"
+  },
+  "homepage": "https://github.com/rubbertoe64/note-taker#readme"
 }
